@@ -8,22 +8,38 @@ use Illuminate\Database\Eloquent\Model;
 class Order extends Model
 {
     use HasFactory;
-    protected $table = "medications";
+    protected $table = "orders";
     protected $fillable = [
+        'payment',
+        'status',
         'quantity',
-        'medication_id',
         'user_id',
+        'medication_id'
 
     ];
+    public array $enum = ['Preparing', 'Sent', 'Received'];
     protected $primaryKey = "id";
     public $timestamps = true;
-    public function medicaiton(){
-        return $this->belongsTo(Medication::class,'medication_id');
-    }
+
     public function user(){
         return $this->belongsTo(User::class,'user_id');
     }
-    public function orders_conditions(){
-        return $this->hasMany(Order_Condition::class);
+    public function medication(){
+        return $this->belongsTo(Medication::class,'medication_id');
+    }
+
+    //some functions to update status
+    public function updatePayment($payment)
+    {
+        // Update the payment status
+        $this->payment = $payment;
+        $this->save();
+    }
+
+    public function updateOrderStatus($orderStatus)
+    {
+        // Update the order status
+        $this->status = $orderStatus;
+        $this->save();
     }
 }

@@ -13,9 +13,11 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->integer('quantity')->unsigned()->default(1)->min(1);
-            $table->foreignId('medication_id')->constrained('medications')->cascadeOnDelete;
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete;
+            $table->foreignId('medication_id')->constrained('medications')->cascadeOnDelete;
+            $table->integer('quantity')->unsigned()->default(1)->min(1);
+            $table->boolean('payment')->default(false);
+            $table->enum('status',['Preparing', 'Sent', 'Received'])->default('Received');
             $table->timestamps();
         });
     }

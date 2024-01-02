@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('username');
             $table->string('mobile')->unique();
             $table->string('password');
+            $table->text('profile_img_url')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

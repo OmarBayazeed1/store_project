@@ -14,7 +14,8 @@ class AuthController extends Controller
         $request->validate([
             'username'=>['required'],
             'mobile'=>['required','unique:users,mobile'],
-            'password'=>['required']
+            'password'=>['required'],
+            'profile_img_url'=>['string']
         ],[
             'mobile.unique'=>"Mobile is not unique"
         ]);
@@ -22,9 +23,26 @@ class AuthController extends Controller
        $user=User::query()->create([
            'username'=>$request['username'],
            'mobile'=>$request['mobile'],
-           'password'=>$request['password']
+           'password'=>$request['password'],
+           'profile_img_url'=>$request['profile_img_url']
        ]);
-      $token= $user->createToken("API TOKEN")->plainTextToken;
+
+        $image_name = 'default.png';
+
+        if ($request->hasFile('image')) {
+            $destination_path = 'public/images/users';
+            $image = $request->file('image');
+            // $date = date('Y-m-d H:i:s');
+
+            $image_name = implode('.', [
+                md5_file($image->getPathname()),
+                $image->getClientOriginalExtension()
+            ]);
+
+            $path = $request->file('image')->storeAs($destination_path, $image_name);
+        }
+
+        $token= $user->createToken("API TOKEN")->plainTextToken;
       $data=[];
       $data['user']=$user;
       $data['token']=$token;
@@ -71,6 +89,16 @@ class AuthController extends Controller
             'data'=>[],
             'message'=>'User Logged out Successfully'
         ]);
+    }
+
+    public function userDetails()
+    {
+        $user = auth()->user();
+
+        return response()->json([
+            'success' => 1,
+            'user' => $user,
+        ], 200);
     }
 
 }

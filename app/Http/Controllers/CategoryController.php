@@ -14,18 +14,18 @@ class CategoryController extends Controller
      */
     public function index(Request $request)
     {
-        $name = $request->query('name');
+        $name = $request->query('title');
         $categoryQuery = Category::query();
 
         if ($name) {
-            $categoryQuery = $categoryQuery->where('name', $name);
+            $categoryQuery = $categoryQuery->where('title', $name);
         }
 
         $categoryQuery = $categoryQuery->get();
 
         return response()->json([
             'success' => 1,
-            'message' => 'Indexed successfuly!',
+            'message' => 'Indexed successfully!',
             'data' => $categoryQuery,
         ], 200);
     }
@@ -103,4 +103,21 @@ class CategoryController extends Controller
     {
         //
     }
+    public function searchByCategoryTitle(Request $request){
+        try
+        {
+            $category=Category::where('title', 'like', '%' . $request->title . '%')->get();
+            return response()->json([
+                'success'=>1,
+                'message'=>'Searched by title successfully!',
+                'data'=>$category
+            ]);
+        }catch(\Exception $exception){
+            return response()->json([
+                'success'=>0,
+                'message' => $exception->getMessage()
+            ], 400);
+        }
+    }
+
 }

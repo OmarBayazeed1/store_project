@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Category extends Model
 {
@@ -16,7 +17,8 @@ class Category extends Model
     protected $primaryKey = "id";
     public $timestamps = true;
 
-    public function medications() {
+    public function medications(): HasMany
+    {
         return $this->hasMany(Medication::class);
     }
 }

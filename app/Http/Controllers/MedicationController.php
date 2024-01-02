@@ -207,4 +207,21 @@ class MedicationController extends Controller
             ], 404);
         }
     }
+
+    function searchByMedicationName(Request $request){
+        try
+        {
+            $medication=Medication::where('commercial_name', 'like', '%' . $request->commercial_name . '%')->get();
+            return response()->json([
+                'success'=>1,
+                'message'=>'Searched by name successfully!',
+                'data'=>$medication
+            ]);
+        }catch(\Exception $exception){
+            return response()->json([
+                'success'=>0,
+                'message' => $exception->getMessage()
+            ], 400);
+        }
+    }
 }

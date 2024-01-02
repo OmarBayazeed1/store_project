@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Medication extends Model
 {
@@ -22,12 +24,22 @@ class Medication extends Model
     ];
     protected $primaryKey = "id";
     public $timestamps = true;
-    public function category() {
+    //public $with=['category'];
+    public function category(): BelongsTo
+    {
         return $this->belongsTo(Category::class, 'category_id');
     }
-    public function orders(){
+    public function orders(): HasMany
+    {
         return $this->hasMany(Order::class);
     }
+    public function favourites(){
+        return $this->hasMany(Favourite::class);
+    }
+
+
+
+
 
 
     //
